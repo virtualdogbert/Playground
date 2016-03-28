@@ -21,24 +21,36 @@ import groovy.transform.*
 @CompileStatic
 class HtmlBouncer{
     List<String> allowedElements = ['p','b','body']
-    List<String> allowedAttributes = ['id', 'class','style']
+    List<String> allowedAttributes = ['id', 'class', 'style']
     void parseHtml(){
         String html = "<p class='classy'>An <a id='5' href='http://example.com/'><b>example</b></a> link.</p>"
-        html = "<p class='classy' style='color:blue'>An <b>example</b> link.</p>"
+        html = "<p class='classy' style='color:blue width:5'>An <b>example</b> link.</p>"
         Document doc = Jsoup.parse(html)
         def elements = doc.body().select("*")
 
         elements.each{ element ->
             if(!(element.tagName() in allowedElements)){
-                System.out.println(element.tagName())
+                println(element.tagName())
+                throw new Exception("Element:${element.tagName()} is not allowed")
             }
             
             element.attributes().each{ attribute ->
-            println attribute.key
-                    println attribute.value
+                println attribute.key
+                println attribute.value
+                String value = attribute.value
                 if(!(attribute.key in allowedAttributes)){
                     println attribute.key
                     println attribute.value
+                    throw new Exception("Atribute: $attribute.key is not allowed for element: ${element.tagName()}")
+                }
+                
+                if(attribute.key=='style'){
+                   
+                    value.split()each{String style ->
+                        String[] styleValues = style.split(':')
+                        println styleValues[0]
+                        println styleValues[1]
+                    }
                 }
             }
         }

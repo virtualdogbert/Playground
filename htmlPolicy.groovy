@@ -67,17 +67,13 @@ public class EbayPolicyExample {
   // The 16 colors defined by the HTML Spec (also used by the CSS Spec)
   private static final Pattern COLOR_NAME = Pattern.compile(
       /(?:aqua|black|blue|fuchsia|gray|grey|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow)/)
-      
-      
-// "black" ==~ /(?:aqua|black|blue|fuchsia|gray|grey|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow)/
-// "fupa" ==~ /(?:aqua|black|blue|fuchsia|gray|grey|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow)/
 
   // HTML/CSS Spec allows 3 or 6 digit hex to specify color
   private static final Pattern COLOR_CODE = Pattern.compile(
       /(?:#(?:[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?))/);
 
   private static final Pattern NUMBER_OR_PERCENT = Pattern.compile(
-      "[0-9]+%?");
+      /[0-9]+%?/);
   private static final Pattern PARAGRAPH = Pattern.compile(
       /(?:[\p{L}\p{N},'\.\s\-_\(\)]|&[0-9]{2};)*/);
   private static final Pattern HTML_ID = Pattern.compile(
@@ -207,13 +203,18 @@ public class EbayPolicyExample {
           .toFactory();
 
   public static void main(String[] args) throws IOException {
+    
+    def testPattern = /(?:aqua|black|blue|fuchsia|gray|grey|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow)/
+    println "black" ==~ testPattern
+    println "asdf" ==~ testPattern
+    
     if (args.length != 0) {
       System.err.println("Reads from STDIN and writes to STDOUT");
       System.exit(-1);
     }
     System.err.println("[Reading from STDIN]");
     // Fetch the HTML to sanitize.
-    String html = "<p style="color:FFF">test</p> <script>alert('powed');</script>"
+    String html = """<p id=5 style="color:black">test</p> <script>alert('powed');</script>"""
     // Set up an output channel to receive the sanitized HTML.
     HtmlStreamRenderer renderer = HtmlStreamRenderer.create(
         System.out,
