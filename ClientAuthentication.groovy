@@ -55,10 +55,13 @@ import groovy.json.JsonSlurper
 import org.apache.log4j.*
 import groovy.util.logging.*
 
+import groovy.transform.CompileStatic
+
 /**
  * A simple example that uses HttpClient that requires user authentication using JSESSIONID.
  */
- @Log4j
+@CompileStatic
+@Log4j
 class HttpClient {
     DefaultHttpClient httpclient
     def sql
