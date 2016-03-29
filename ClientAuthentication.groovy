@@ -161,19 +161,20 @@ class HttpClient {
         }
     }
 
-    void addParams(HttpRequestBase request, map){
-        List <NameValuePair> nvps = map.collect{
-            new BasicNameValuePair(it.key, it.value)
+    void addParams(HttpEntityEnclosingRequestBase request, Map<String,String> map){
+        List <BasicNameValuePair> nvps = map.collect{ String key, String value ->
+            new BasicNameValuePair(key, value)
         }
         
-        request.setEntity(new UrlEncodedFormEntity(nvps))
+        request.setEntity(new UrlEncodedFormEntity(nvps) as HttpEntity)
     }
 
-    void addFiles(HttpRequestBase request, filePaths){
-        filePaths.each{ name, filePath ->
+
+    void addFiles(HttpRequestBase request, Map<String,String> filePaths){
+        filePaths.each{ String name, String filePath ->
             File uploadFile = new File(filePath)
             if (!uploadFile.exists()) {
-                throw FileNotFoundException()
+                throw new FileNotFoundException(filePath)
             }
 
             addFile(request, name, uploadFile)
@@ -182,12 +183,18 @@ class HttpClient {
     }
 
     void addFile(HttpRequestBase request,String name, File uploadFile){
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create()
-        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-        builder.addBinaryBody(name,uploadFile,ContentType.MULTIPART_FORM_DATA,uploadFile.getName())
-        HttpEntity entity = builder.buildEntity()
-        request.setEntity(entity)
+
+        FileBody bin = new FileBody(uploadFile)
+        StringBody comment = new StringBody("A binary file of some kind", ContentType.TEXT_PLAIN)
+
+        HttpEntity entity = MultipartEntityBuilder.create()
+                .addPart("bin", bin)
+                .addPart("comment", comment)
+                .build()
+
         (request as HttpEntityEnclosingRequestBase).setEntity(entity)
+
+
     }
 
     void logOut(){
