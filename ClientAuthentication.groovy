@@ -122,8 +122,10 @@ class HttpClient {
 
     Object executeHttpCall(HttpRequestBase request, Map filePaths = null, Map params = null, Map jsonBody = null) {
         try {
-            def resonseObject = ""
-            request.setHeader('Cookie', securityCookie)
+            Object resonseObject = ""
+            if(accessToken) {
+                request.setHeader('Authorization', "Bearer $accessToken")
+            }
             request.setHeader("Connection", "keep-alive")
 
             if(params){
