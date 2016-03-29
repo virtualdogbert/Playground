@@ -192,7 +192,7 @@ class HttpClient {
 
     void logOut(){
         try{
-            executeGet(LOG_OUT_URL)
+            executePost(LOG_OUT_URL)
         } finally {
             httpclient.getConnectionManager().shutdown()
             log.info "logged out"
