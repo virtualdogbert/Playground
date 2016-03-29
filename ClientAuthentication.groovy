@@ -158,19 +158,22 @@ class HttpClient {
             }
 
             if (jsonBody){
-                request.setRequestBody(JsonOutput.toJSON(jsonBody))
+                (request as HttpEntityEnclosingRequestBase).setEntity(new StringEntity(new JsonBuilder(jsonBody).toString()) as HttpEntity)
             }
             
             HttpResponse response = httpclient.execute(request)
             log.info response.getStatusLine()
             HttpEntity entity = response.getEntity()
+
             if (entity) {
-                def responseText = entity.getContent().getText()
-                def slurper = new JsonSlurper()
+                String responseText = entity.getContent().getText()
+                JsonSlurper slurper = new JsonSlurper()
+
                 try{
-                    resonseJson = slurper.parseText(responseText)
+                    resonseObject = slurper.parseText(responseText)
                 }catch(Exception ep){
                     //not json
+                    log.warn "request response is text not JSON"
                     resonseObject = responseText
                 }
             }
@@ -181,6 +184,8 @@ class HttpClient {
         } catch (Exception e) {
             log.info e.getMessage()
             e.printStackTrace() 
+        }finally {
+            request.releaseConnection()
         }
     }
 
