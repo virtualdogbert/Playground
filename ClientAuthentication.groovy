@@ -82,7 +82,7 @@ class HttpClient {
         print "Enter username: "
         String username = System.console().readLine()
         print "Enter password: "
-        def password = System.console().readPassword()
+        char[] password = System.console().readPassword()
         logIn(username, password.toString())
     }
 
@@ -127,7 +127,7 @@ class HttpClient {
             request.setHeader("Connection", "keep-alive")
 
             if(params){
-                addParams(request, params)
+                addParams(request as HttpEntityEnclosingRequestBase, params)
             }
 
             if(filePaths){
@@ -187,6 +187,7 @@ class HttpClient {
         builder.addBinaryBody(name,uploadFile,ContentType.MULTIPART_FORM_DATA,uploadFile.getName())
         HttpEntity entity = builder.buildEntity()
         request.setEntity(entity)
+        (request as HttpEntityEnclosingRequestBase).setEntity(entity)
     }
 
     void logOut(){
@@ -202,7 +203,7 @@ class HttpClient {
 
 
     static void main(String[] args) throws Exception {
-        def httpClient
+        HttpClient httpClient
         try{
             httpClient  = new HttpClient()
             //println httpClient.executePost(UPLOAD_URL, ["attachment":"/home/username/some_file.txt"])
