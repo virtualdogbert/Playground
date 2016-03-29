@@ -41,8 +41,15 @@ import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.message.BasicNameValuePair
 import org.apache.http.entity.mime.HttpMultipartMode
 import org.apache.http.entity.mime.MultipartEntityBuilder
+import org.apache.http.entity.StringEntity
+import org.apache.http.entity.mime.content.FileBody
+import org.apache.http.entity.mime.content.StringBody
+import static org.apache.http.HttpStatus.*
+
+import org.apache.commons.io.IOUtils
 
 import groovy.json.JsonOutput
+import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 
 import org.apache.log4j.*
