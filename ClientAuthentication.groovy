@@ -67,10 +67,10 @@ class HttpClient {
     String accessToken
 
 
-    static String SERVICE_NAME = ''
+    static String SERVICE_NAME = 'Service'
     static String SERVER = "http://localhost:8080/$SERVICE_NAME"
-    static String LOG_IN_URL = "$SERVER/j_spring_security_check"
-    static String LOG_OUT_URL = "$SERVER/j_spring_security_logout"
+    static String LOG_IN_URL = "$SERVER/api/login"
+    static String LOG_OUT_URL = "$SERVER/api/logout"
 
     static String GET_URL = "$SERVER/controller/action"
     static String UPLOAD_URL = "$SERVER/controller/action"
