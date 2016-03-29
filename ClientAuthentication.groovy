@@ -22,11 +22,9 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-//@GrabConfig( systemClassLoader=true )
-@Grab('commons-logging:commons-logging:1.1.3')
-@Grab(group='org.apache.httpcomponents', module='httpclient', version='4.5')
-@Grab(group='org.apache.httpcomponents', module='httpmime', version='4.5')
-
+@Grab('org.apache.httpcomponents:httpclient:4.5')
+@Grab('org.apache.httpcomponents:httpmime:4.5')
+@Grab('commons-io:commons-io:2.4')
 @Grab('log4j:log4j:1.2.17')
 
 import org.apache.http.Header
