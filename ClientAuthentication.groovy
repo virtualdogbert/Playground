@@ -64,10 +64,7 @@ import groovy.transform.CompileStatic
 @Log4j
 class HttpClient {
     DefaultHttpClient httpclient
-    def sql
-    String databaseUserName
-    def databasePassword
-    String securityCookie = ""
+    String accessToken
 
 
     static String SERVICE_NAME = ''
@@ -91,25 +88,15 @@ class HttpClient {
 
     void logIn(String userName, String password){
         httpclient = new DefaultHttpClient()
-        HttpPost post = new HttpPost(LOG_IN_URL)
+        
         
         try {
-            addParams(post,["j_username": userName, "j_password": password])
-            post.setHeader("Connection", "keep-alive")
+            Map post = executePost(LOG_IN_URL, null, null, [username: userName, password: password]) as Map
+            accessToken = post.access_token
 
-            HttpResponse response = httpclient.execute(post)
-            Header[] headers = response.getAllHeaders()
-            
-            headers.each { header ->
-                if (header.getName() == "Set-Cookie" && "JSESSIONID" in header.getValue()){
-                    securityCookie = header.getValue()
-                }
-            }
-
-            log.info response.getStatusLine()
             log.info "logged in"
-        } finally {
-            post.releaseConnection()
+        } catch(Exception e){
+            log.error e.getMessage()        
         }
     }
 
