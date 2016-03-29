@@ -105,6 +105,27 @@ class HttpClient {
         executeHttpCall(get)
     }
 
+    void getDownload(String url, String ouputFileName){
+        OutputStream outputStream
+        
+        HttpGet get = new HttpGet(url)
+        get.setHeader('Authorization', "Bearer $accessToken")
+        HttpResponse response = httpclient.execute(get)
+
+        if (response.getStatusLine() == SC_OK) {
+            try{
+                InputStream inputStream = new BufferedInputStream(response.getEntity().getContent())
+                outputStream = new BufferedOutputStream(new FileOutputStream(new File(ouputFileName)))
+                IOUtils.copy(inputStream,outputStream)
+                outputStream.flush()
+            } finally {
+                outputStream.close()
+            }
+        } else{
+            log.error response.getStatusLine()
+        }
+    }
+
     Object executePut(String url, Map jsonBody){
         HttpPut put = new HttpPut(url)
         executeHttpCall(put, null, null, jsonBody)
